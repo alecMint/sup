@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="http://start.jewelmint.com/k/assets/reset.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<!--<script src="http://m1.jewelmint.com/k/assets/acqadmin/json2.js"></script>
+-->
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('new_person', function (data) {
+    console.log('new person has joined', data);
+    //socket.emit('my other event', { my: 'data' });
+  });
+  socket.on('info',function(data){
+    console.log('info',data);
+  });
+</script>
+
+<style type="text/css">
+
+</style>
+
+</head>
+<body>
+
+    sup
+
+</body>
+</html>
