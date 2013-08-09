@@ -3,6 +3,7 @@ var corsair = require('http').createServer()
 ,coxwain = require('socket.io').listen(corsair,{log:false})
 ,bringtoarms = require('./bringtoarms')
 ,chestCapacity = 40
+,mateyLifeExpectancy = 1000*60*10
 ,mateys = {}
 ,coffer = []
 
@@ -27,9 +28,21 @@ coxwain.sockets.on('connection',function(socket){
       socket.emit('touche', false)
       return
     }
-    mateys[data.matey.id] = data.matey
-    mateys[data.matey.id]._aTime = Date.now()
+    var t = Date.now()
+    if (!mateys[data.matey.id]) {
+      mateys[data.matey.id] = data.matey
+    }
+    mateys[data.matey.id]._aTime = t
+    if (!mateys[data.matey.id]._active) {
+      coffer.push({
+        type: 'system'
+        ,matey_id: data.matey.id
+        ,treatise: '%user% has joined'
+        ,t: t
+      })
+    }
     socket.emit('touche', true)
+    walkThePlank()
     ahoy()
   })
   socket.on('missive',function(data){
@@ -69,7 +82,9 @@ function walkThePlank(){
   for (k in mateys) {
     if (!guillotineFree[k]) {
       delete mateys[k]
+      continue;
     }
+    mateys[k]._active = (mateys[k]._aTime + mateyLifeExpectancy) >= Date.now();
   }
 }
 
