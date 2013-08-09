@@ -2,7 +2,7 @@
 var corsair = require('http').createServer()
 ,coxwain = require('socket.io').listen(corsair,{log:false})
 ,bringtoarms = require('./bringtoarms')
-,chestCapacity = 40
+,chestCapacity = 100
 ,mateyLifeExpectancy = 1000*60*10
 ,decks = {}
 
