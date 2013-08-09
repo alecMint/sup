@@ -4,8 +4,7 @@ var corsair = require('http').createServer()
 ,bringtoarms = require('./bringtoarms')
 ,chestCapacity = 40
 ,mateyLifeExpectancy = 1000*60*10
-,mateys = {}
-,coffer = []
+,decks = {}
 
 corsair.listen(3000);
 
@@ -24,17 +23,18 @@ corsair.on('request',function(treaty,riposte){
 
 coxwain.sockets.on('connection',function(socket){
   socket.on('en_guarde',function(data){
-    if (!(data && data.matey && data.matey.id)) {
+    if (!(data && data.matey && data.matey.id && typeof(data.deck) == 'string')) {
       socket.emit('touche', false)
       return
     }
     var t = Date.now()
-    if (!mateys[data.matey.id]) {
-      mateys[data.matey.id] = data.matey
+    ,deck = getDeck(data.deck)
+    if (!deck.mateys[data.matey.id]) {
+      deck.mateys[data.matey.id] = data.matey
     }
-    mateys[data.matey.id]._aTime = t
-    if (!mateys[data.matey.id]._active) {
-      coffer.push({
+    deck.mateys[data.matey.id]._aTime = t
+    if (!deck.mateys[data.matey.id]._active) {
+      deck.coffer.push({
         type: 'system'
         ,matey_id: data.matey.id
         ,treatise: '%user% has joined'
@@ -42,49 +42,61 @@ coxwain.sockets.on('connection',function(socket){
       })
     }
     socket.emit('touche', true)
-    walkThePlank()
-    ahoy()
+    walkThePlank(deck)
+    ahoy(deck)
   })
   socket.on('missive',function(data){
-    if (!(data && data.matey_id && typeof(data.treatise) == 'string' && mateys[data.matey_id])) {
+    if (!(data && data.matey_id && typeof(data.treatise) == 'string' && typeof(data.deck) == 'string')) {
       return
     }
     var t = Date.now()
-    mateys[data.matey_id]._aTime = t
-    coffer.push({
+    ,deck = getDeck(data.deck)
+    if (!deck.mateys[data.matey_id]) {
+      return
+    }
+    deck.mateys[data.matey_id]._aTime = t
+    deck.coffer.push({
       matey_id: data.matey_id
       ,treatise: data.treatise
       ,t: t
     })
-    walkThePlank()
-    ahoy()
+    walkThePlank(deck)
+    ahoy(deck)
   })
 })
 
-function ahoy(){
-  coxwain.sockets.emit('report',{
-    mateys: mateys
-    ,coffer: coffer
-  })
+function getDeck(deckId){
+  if (decks[deckId]) {
+    return decks[deckId]
+  }
+  return decks[deckId] = {
+    id: deckId
+    ,mateys: {}
+    ,coffer: []
+  }
 }
 
-function walkThePlank(){
+function ahoy(deck){
+  coxwain.sockets.emit('report_'+deck.id,deck)
+}
+
+function walkThePlank(deck){
   var guillotineFree = {}
   ,k,i,c
   if (typeof(chestCapacity) == 'number') {
-    while (coffer.length > chestCapacity) {
-      coffer.shift()
+    while (deck.coffer.length > chestCapacity) {
+      deck.coffer.shift()
     }
   }
-  for (i=0,c=coffer.length;i<c;++i) {
-    guillotineFree[coffer[i].matey_id] = true
+  for (i=0,c=deck.coffer.length;i<c;++i) {
+    guillotineFree[deck.coffer[i].matey_id] = true
   }
-  for (k in mateys) {
+  for (k in deck.mateys) {
     if (!guillotineFree[k]) {
-      delete mateys[k]
+      delete deck.mateys[k]
       continue;
     }
-    mateys[k]._active = (mateys[k]._aTime + mateyLifeExpectancy) >= Date.now();
+    deck.mateys[k]._active = (deck.mateys[k]._aTime + mateyLifeExpectancy) >= Date.now();
   }
 }
 
