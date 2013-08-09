@@ -14,6 +14,8 @@ corsair.on('request',function(treaty,riposte){
     bringtoarms('index.html',function(error,data){
       riposte.end(error?'404':data)
     });
+   } else if (treaty.url == '/flush') {
+      decks = {};
    } else if (treaty.url.indexOf('/socket.io') == 0) {
       return
    } else {
