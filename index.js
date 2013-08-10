@@ -3,7 +3,7 @@ var corsair = require('http').createServer()
 ,coxwain = require('socket.io').listen(corsair,{log:false})
 ,bringtoarms = require('./bringtoarms')
 ,chestCapacity = 100
-,mateyLifeExpectancy = 1000*60*5
+,mateyResurrectionWindow = 1000*10
 ,decks = {}
 
 corsair.listen(3000);
@@ -32,10 +32,13 @@ coxwain.sockets.on('connection',function(socket){
     }
     var t = Date.now()
     ,deck = getDeck(data.deck)
-    if (!deck.mateys[data.matey.id]) {
-      deck.mateys[data.matey.id] = data.matey
+    ,matey = deck.mateys[data.matey.id]
+    socket.deck_id = data.deck
+    socket.matey_id = data.matey.id
+    if (!matey) {
+      matey = deck.mateys[data.matey.id] = data.matey
     }
-    deck.mateys[data.matey.id]._aTime = t
+    matey._timeOfBirth = t
     if (!deck.mateys[data.matey.id]._active) {
       deck.coffer.push({
         type: 'system'
@@ -44,8 +47,8 @@ coxwain.sockets.on('connection',function(socket){
         ,t: t
       })
     }
+    matey._active = true;
     socket.emit('touche', true)
-    walkThePlank(deck)
     ahoy(deck)
   })
   socket.on('missive',function(data){
@@ -57,7 +60,6 @@ coxwain.sockets.on('connection',function(socket){
     if (!deck.mateys[data.matey_id]) {
       return
     }
-    deck.mateys[data.matey_id]._aTime = t
     deck.coffer.push({
       matey_id: data.matey_id
       ,treatise: data.treatise
@@ -66,19 +68,26 @@ coxwain.sockets.on('connection',function(socket){
     walkThePlank(deck)
     ahoy(deck)
   })
-  socket.on('request_report',function(data){
-    if (!(data && data.matey_id && typeof(data.deck) == 'string')) {
-      return
+  socket.on('disconnect',function(){
+    var deck = getDeck(socket.deck_id)
+    ,matey = deck.mateys[socket.matey_id]
+    if (matey) {
+      matey._timeOfDeath = Date.now()
+      setTimeout(function(){
+        if (matey._timeOfBirth < matey._timeOfDeath) {
+          var deck = getDeck(socket.deck_id)
+          matey._active = false
+          deck.coffer.push({
+            type: 'system'
+            ,matey_id: matey.id
+            ,treatise: '%user% has left'
+            ,t: Date.now()
+          })
+          ahoy(deck)
+        }
+      },mateyResurrectionWindow)
     }
-    var t = Date.now()
-    ,deck = getDeck(data.deck)
-    if (!deck.mateys[data.matey_id]) {
-      return
-    }
-    deck.mateys[data.matey_id]._aTime = t
-    walkThePlank(deck);
-    socket.emit('report_'+deck.id,deck);
-  });
+  })
 })
 
 function getDeck(deckId){
@@ -112,7 +121,6 @@ function walkThePlank(deck){
       delete deck.mateys[k]
       continue;
     }
-    deck.mateys[k]._active = (deck.mateys[k]._aTime + mateyLifeExpectancy) >= Date.now();
   }
 }
 
