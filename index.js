@@ -66,6 +66,14 @@ coxwain.sockets.on('connection',function(socket){
     walkThePlank(deck)
     ahoy(deck)
   })
+  socket.on('request_report',function(data){
+    if (!(data && data.deck)) {
+      return
+    }
+    var deck = getDeck(data.deck)
+    walkThePlank(deck);
+    socket.emit('report_'+deck.id,deck);
+  });
 })
 
 function getDeck(deckId){
