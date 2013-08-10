@@ -67,10 +67,15 @@ coxwain.sockets.on('connection',function(socket){
     ahoy(deck)
   })
   socket.on('request_report',function(data){
-    if (!(data && data.deck)) {
+    if (!(data && data.matey_id && typeof(data.deck) == 'string')) {
       return
     }
-    var deck = getDeck(data.deck)
+    var t = Date.now()
+    ,deck = getDeck(data.deck)
+    if (!deck.mateys[data.matey_id]) {
+      return
+    }
+    deck.mateys[data.matey_id]._aTime = t
     walkThePlank(deck);
     socket.emit('report_'+deck.id,deck);
   });
