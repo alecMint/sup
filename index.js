@@ -9,19 +9,25 @@ var corsair = require('http').createServer()
 corsair.listen(3000);
 
 corsair.on('request',function(treaty,riposte){
-  if (treaty.url == '/') {
-    riposte.setHeader('Content-Type','text/html');
-    bringtoarms('index.html',function(error,data){
-      riposte.end(error?'404':data)
-    });
-   } else if (treaty.url == '/flush') {
-      decks = {};
-      riposte.end('flushed');
-   } else if (treaty.url.indexOf('/socket.io') == 0) {
-      return
-   } else {
-      riposte.end('ne m\'oubliez pas')
-   }
+  var res,qs
+  if (treaty.url.indexOf('/api') == 0) {
+    qs = require('url').parse(treaty.url,true).query
+    res = JSON.stringify(api( treaty.url.substr('/api'.length), qs ))
+    if (qs.callback) {
+      riposte.setHeader('Content-Type','text/javascript')
+      res = qs.callback+'('+res+')'
+    } else {
+      riposte.setHeader('Content-Type','text/json')
+    }
+    riposte.end(res)
+  } else if (treaty.url == '/flush') {
+    decks = {}
+    riposte.end('flushed')
+  } else if (treaty.url.indexOf('/socket.io') == 0) {
+    return
+  } else {
+    riposte.end('ne m\'oubliez pas')
+  }
 })
 
 coxwain.sockets.on('connection',function(socket){
@@ -124,4 +130,19 @@ function walkThePlank(deck){
   }
 }
 
-
+function api(path,opts){
+  var error = false
+  ,data
+  do {
+    if (path.indexOf('/get/deck') == 0) {
+      if (!opts.deck_id) {
+        error = 'missing deck_id'
+        break
+      }
+      data = getDeck(opts.deck_id)
+      break
+    }
+    error = 'unknown route'
+  } while (false)
+  return error === false ? {success:1, data:data} : {success:0, message:error}
+}
