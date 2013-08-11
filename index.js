@@ -1,6 +1,7 @@
 // arrrrr!
 var corsair = require('http').createServer()
 ,coxwain = require('socket.io').listen(corsair,{log:false})
+,captainsLog = require('fs')
 ,bringtoarms = require('./bringtoarms')
 ,chestCapacity = 100
 ,mateyResurrectionWindow = 1000*10
@@ -106,6 +107,7 @@ Deck.prototype.logMissive = function(mateyId,treatise,type){
   /*if (!Number.isFinite(this.coffer_i)) {
     this.coffer_i = 0
   }*/
+  captainsLog.appendFile('./log/'+this.id.replace(/[\/.]/g,'_'),JSON.stringify(m)+'\n')
   return this
 }
 Deck.prototype.ahoy = function(){
