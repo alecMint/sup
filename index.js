@@ -83,7 +83,7 @@ function getDeck(deckId){
   if (decks[deckId]) {
     return decks[deckId]
   }
-  return new Deck(deckId)
+  return decks[deckId] = new Deck(deckId)
 }
 
 function Deck(id){
@@ -103,10 +103,13 @@ Deck.prototype.logMissive = function(mateyId,treatise,type){
     m.type = type
   }
   this.coffer.push(m)
+  /*if (!Number.isFinite(this.coffer_i)) {
+    this.coffer_i = 0
+  }*/
   return this
 }
 Deck.prototype.ahoy = function(){
-  coxwain.sockets.emit('report_'+deck.id,this)
+  coxwain.sockets.emit('report_'+this.id,this)
   return this
 }
 Deck.prototype.walkThePlank = function(){
