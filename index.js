@@ -4,7 +4,7 @@ var corsair = require('http').createServer()
 ,captainsLog = require('fs')
 ,bringtoarms = require('./bringtoarms')
 ,chestCapacity = 100
-,mateyResurrectionWindow = 1000*10
+,mateyResurrectionWindow = 1000*20
 ,decks = {}
 
 corsair.listen(3000);
