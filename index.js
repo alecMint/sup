@@ -104,9 +104,9 @@ Deck.prototype.logMissive = function(mateyId,treatise,type){
     m.type = type
   }
   this.coffer.push(m)
-  /*if (!Number.isFinite(this.coffer_i)) {
-    this.coffer_i = 0
-  }*/
+  if (this.coffer_i == 9007199254740992) {
+    this.coffer_i = 0;
+  }
   captainsLog.appendFile('./log/'+this.id.replace(/[\/.]/g,'_'),JSON.stringify(m)+'\n')
   return this
 }
