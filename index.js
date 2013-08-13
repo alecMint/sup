@@ -45,7 +45,7 @@ coxwain.sockets.on('connection',function(socket){
       matey = deck.mateys[data.matey.id] = data.matey
     }
     matey._timeOfBirth = Date.now()
-    socket.emit('touche', true)
+    socket.emit('touche', deck)
     if (!deck.mateys[data.matey.id]._active) {
       matey._active = true;
       deck.logMissive(data.matey.id,'%user% has joined','system').ahoy()
