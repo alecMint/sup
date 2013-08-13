@@ -45,15 +45,11 @@ coxwain.sockets.on('connection',function(socket){
       matey = deck.mateys[data.matey.id] = data.matey
     }
     matey._timeOfBirth = Date.now()
-    if (!deck.mateys[data.matey.id]._active) {
-      deck.logMissive(data.matey.id,'%user% has joined','system')
-      matey._active = true;
-      // need touche first
-      process.nextTick(function(){
-        deck.ahoy()
-      });
-    }
     socket.emit('touche', true)
+    if (!deck.mateys[data.matey.id]._active) {
+      matey._active = true;
+      deck.logMissive(data.matey.id,'%user% has joined','system').ahoy()
+    }
   })
   socket.on('missive',function(data){
     if (!(data && data.matey_id && typeof(data.treatise) == 'string' && typeof(data.deck) == 'string')) {
