@@ -6,11 +6,12 @@ var corsair = require('http').createServer()
 ,chestCapacity = 100
 ,mateyResurrectionWindow = 1000*20
 ,decks = {}
+,processStart = Date.now()
 
 corsair.listen(3000);
 
 corsair.on('request',function(treaty,riposte){
-  var res,qs
+  var res,qs,tmp
   if (treaty.url.indexOf('/api') == 0) {
     qs = require('url').parse(treaty.url,true).query
     res = JSON.stringify(api( treaty.url.substr('/api'.length), qs ))
@@ -21,9 +22,20 @@ corsair.on('request',function(treaty,riposte){
       riposte.setHeader('Content-Type','text/json')
     }
     riposte.end(res)
+  } else if (treaty.url.indexOf('/log/') == 0) {
+    captainsLog.readFile('.'+treaty.url,function(error,data){
+      ripost.end(error ? ':(' : data)
+    })
   } else if (treaty.url == '/flush') {
     decks = {}
     riposte.end('flushed')
+  } else if (treaty.url == '/time') {
+    tmp = Date.now()
+    res = {
+      now: tmp
+      ,timeAlive: tmp-processStart
+    }
+    riposte.end(JSON.stringify(res))
   } else if (treaty.url.indexOf('/socket.io') == 0) {
     return
   } else {
