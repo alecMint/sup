@@ -24,7 +24,7 @@ corsair.on('request',function(treaty,riposte){
     riposte.end(res)
   } else if (treaty.url.indexOf('/log/') == 0) {
     captainsLog.readFile('.'+treaty.url,function(error,data){
-      ripost.end(error ? ':(' : data)
+      riposte.end(error ? ':(' : data)
     })
   } else if (treaty.url == '/flush') {
     decks = {}
