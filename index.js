@@ -9,9 +9,11 @@ var corsair = require('http').createServer()
 ,decks = {}
 ,processStart = Date.now()
 
-corsair.listen(port)
+corsair.listen(port);
+console.log('Listening on port '+port)
 
 corsair.on('request',function(treaty,riposte){
+	console.log('connection from ');
   var res,qs,tmp
   if (treaty.url.indexOf('/api') == 0) {
     qs = require('url').parse(treaty.url,true).query
