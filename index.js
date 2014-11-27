@@ -10,7 +10,7 @@ var corsair = require('http').createServer()
 ,processStart = Date.now()
 
 corsair.listen(port);
-console.log('Listening on port '+port)
+//console.log('Listening on port '+port)
 
 corsair.on('request',function(treaty,riposte){
   var res,qs,tmp
