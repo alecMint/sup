@@ -2,13 +2,14 @@
 var corsair = require('http').createServer()
 ,coxwain = require('socket.io').listen(corsair,{log:false})
 ,captainsLog = require('fs')
+,port = require('./config.js').port
 ,bringtoarms = require('./bringtoarms')
 ,chestCapacity = 100
 ,mateyResurrectionWindow = 1000*20
 ,decks = {}
 ,processStart = Date.now()
 
-corsair.listen(3000);
+corsair.listen(port)
 
 corsair.on('request',function(treaty,riposte){
   var res,qs,tmp
@@ -139,7 +140,7 @@ Deck.prototype.walkThePlank = function(){
   for (k in this.mateys) {
     if (!guillotineFree[k]) {
       delete this.mateys[k]
-      continue;
+      continue
     }
   }
   return this

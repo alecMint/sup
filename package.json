@@ -1,16 +1,25 @@
 {
-  "name": "sup",
-  "version": "0.0.0",
-  "description": "ERROR: No README.md file found!",
-  "main": "index.js",
+	"name": "sup",
+	"description": "Chat widget using websockets",
+	"keywords": [
+		"chat",
+		"websocket"
+	],
+	"version": "0.0.0",
+	"author": "fluffybunnies",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:fluffybunnies/sup.git"
+	},
+	"dependencies": {
+		"socket.io": "0.9.16",
+		"sext": "0.0.10"
+	},
+	"devDependencies": {
+	},
+	"main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js"
-  },
-  "repository": "",
-  "author": "",
-  "license": "BSD",
-  "dependencies": {
-    "socket.io": "~0.9.16"
   }
 }
