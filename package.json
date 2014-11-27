@@ -9,7 +9,7 @@
 	"author": "fluffybunnies",
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:fluffybunnies/sup.git"
+		"url": "git@github.com:fluffybunnies/arrrr.git"
 	},
 	"dependencies": {
 		"socket.io": "0.9.16",

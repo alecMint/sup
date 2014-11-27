@@ -1,9 +1,7 @@
 arrrr
 ===
 
-Lightweight FE/BE Framework. Provides tools for launching prototype websites.
-
-Demo using ace for front-end: http://ace.fabfitfun.com/demo
+Backend for chat server using node. Front-end will be supplied as a corresponding package.
 
 
 ### Install
