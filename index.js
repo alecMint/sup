@@ -8,9 +8,15 @@ var corsair = require('http').createServer()
 ,mateyResurrectionWindow = 1000*20
 ,decks = {}
 ,processStart = Date.now()
+,argv = require('minimist')(process.argv.slice(2))
+
+if (argv.port) {
+	port = argv.port;
+	console.log('Port config overridden by arg');
+}
 
 corsair.listen(port);
-//console.log('Listening on port '+port)
+console.log('Listening on port '+port)
 
 corsair.on('request',function(treaty,riposte){
   var res,qs,tmp

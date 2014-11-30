@@ -13,7 +13,8 @@
 	},
 	"dependencies": {
 		"socket.io": "0.9.16",
-		"sext": "0.0.10"
+		"sext": "0.0.10",
+		"minimist": "1.1.0"
 	},
 	"devDependencies": {
 	},
