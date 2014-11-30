@@ -1,7 +1,11 @@
 arrrr
 ===
 
-Backend for chat server using node. Front-end will be supplied as a corresponding package.
+Backend for chat server using node.
+
+Front-end will be supplied as a corresponding package. Until I have the FE in an isolated package, you can check out Ace which uses Arrrr:
+https://github.com/fluffybunnies/ace
+http://ace.fabfitfun.com/demo
 
 
 ### Install
