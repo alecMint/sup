@@ -126,7 +126,7 @@ Deck.prototype.logMissive = function(mateyId,treatise,type){
   if (this.coffer_i == 9007199254740992) {
     this.coffer_i = 0;
   }
-  captainsLog.appendFile('./log/'+this.id.replace(/[\/.]/g,'_'),JSON.stringify(m)+'\n')
+  captainsLog.appendFile(__dirname+'/log/'+this.id.replace(/[\/.]/g,'_'),JSON.stringify(m)+'\n')
   return this
 }
 Deck.prototype.ahoy = function(){
